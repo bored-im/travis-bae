@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cp /config/travis.yml config/travis.yml
+bundle exec sidekiq
