@@ -1,0 +1,12 @@
+# NOTE: Refer to these 2 files for more info:
+# - https://github.com/mperham/sidekiq/blob/master/examples/config.yml
+# - https://github.com/mperham/sidekiq/blob/master/lib/sidekiq.rb#DEFAULTS
+# - https://github.com/mperham/sidekiq/blob/master/lib/sidekiq/cli.rb
+#
+# All keys are prepended with `:` so that they are read as symbols!
+---
+:verbose: true
+:concurrency: 25
+:timeout: 8
+:queues:
+  - sync

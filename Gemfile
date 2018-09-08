@@ -7,3 +7,13 @@ gem 'rails', '~> 5.2.1'
 gem 'puma', '~> 3.11'
 gem 'pg'
 gem 'sidekiq'
+gem 'redis-namespace'
+
+gem 'octokit'
+
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', '>= 1.1.0', require: false
+
+group :development do
+  gem 'listen', '>= 3.0.5', '< 3.2'
+end

@@ -1,0 +1,10 @@
+development:
+  oauth2:
+    authorization_server: "https://github.com"
+    authorize_path: "login/oauth/authorize"
+    access_token_path: "login/oauth/access_token"
+    client_id: 288676906efc5d256e7b
+    client_secret: ef8ba53d8dedf1690e2a0f02ed22336598b9dc91
+    scope: "user:email,repo,read:org"
+  encryption:
+    key: "secretsecretsecretsecretsecretsecretsecretsecretsecretsecret"
