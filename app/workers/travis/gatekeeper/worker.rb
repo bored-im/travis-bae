@@ -55,6 +55,13 @@ module Travis
           branch: payload["ref"].split("/").last,
           compare_url: payload["compare"],
           state: "created")
+
+        job = Job.create!(
+          repository_id: repository.id,
+          commit_id: commit.id,
+          source: build,
+          state: "created",
+          owner: owner)
       end
     end
   end
