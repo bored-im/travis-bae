@@ -19,6 +19,8 @@ module Travis
         github_token = user.github_oauth_token
 
         client = Octokit::Client.new(access_token: github_token)
+        client.auto_paginate = true
+
         orgs = client.orgs.each do |gh_org|
           org = Organization.find_or_initialize_by(github_id: gh_org[:id])
           org.update_attributes!(
