@@ -60,8 +60,7 @@ module Travis
             pull: gh_repo[:permissions][:pull])
         end
 
-        user.update_attributes!(synced_at: Time.current,
-                                is_syncing: false)
+        user.update_columns(synced_at: Time.current, is_syncing: false)
       end
     end
   end
