@@ -51,6 +51,7 @@ module Travis
           committer_email: payload["head_commit"]["committer"]["email"],
           author_name: payload["head_commit"]["author"]["name"],
           author_email: payload["head_commit"]["author"]["email"],
+          event_type: "push",
           ref: payload["ref"],
           branch: payload["ref"].split("/").last,
           compare_url: payload["compare"],
