@@ -110,7 +110,7 @@ module Travis
 
       def create_job_with_config(repository, commit, build, owner,
                                  job_config_json, index)
-        job_config = JobConfig.create!(repository_id: repository.id,
+        job_config = JobConfig.create!(repository_id: repository.id, key: 'key',
                                        config: job_config_json)
         Job.create!(
           repository_id: repository.id,
