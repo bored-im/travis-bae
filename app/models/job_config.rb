@@ -1,0 +1,2 @@
+class JobConfig < ApplicationRecord
+end

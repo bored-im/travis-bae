@@ -1,3 +1,5 @@
+require 'travis/yaml'
+
 module Travis
   module Gatekeeper
     class Worker
@@ -17,7 +19,7 @@ module Travis
 
       def create_build_from_push(payload)
         repository = Repository.find_by!(github_id: payload["repository"]["id"])
-        owner = User.find_by!(login: payload["pusher"]["name"])
+        owner = User.find_or_create_by!(login: payload["pusher"]["name"])
         commit = Commit.find_or_initialize_by(commit: payload["head_commit"]["id"])
         commit.update_attributes!(
           repository_id: repository.id,
@@ -56,13 +58,68 @@ module Travis
           branch: payload["ref"].split("/").last,
           compare_url: payload["compare"],
           state: "created")
+        build.update_attributes!(number: build.id)
 
-        job = Job.create!(
+        create_jobs!(repository, commit, owner, build)
+      end
+
+      def create_jobs!(repository, commit, owner, build)
+        matrix_array = travis_matrix(repository, commit)
+        matrix = matrix_array.first
+
+        if matrix["matrix"].present?
+          matrix["matrix"]["include"].each_with_index do |matrix_config, index|
+            job_config_json =
+              matrix
+              .slice("dist", "group", "addons")
+              .merge(matrix_config)
+              .merge(os: "linux") # TODO: This can be other OS also
+
+            create_job_with_config(repository, commit, build, owner,
+                                   job_config_json, index + 1)
+          end
+        else
+          create_job_with_config(repository, commit, build, owner,
+                                 matrix, 1)
+        end
+      end
+
+      def config
+        file = File.expand_path('config/travis.yml')
+        env = ENV['RAILS_ENV']
+        YAML.load_file(file)[env]
+      end
+
+      def travis_matrix(repository, commit)
+        gh_oauth = config["oauth2"]
+        gh_client_id = gh_oauth["client_id"]
+        gh_client_secret = gh_oauth["client_secret"]
+
+        repo_url = "https://api.github.com/repos/" + repository.owner_name + "/" + repository.name
+        travis_yaml_url = repo_url + "/contents/.travis.yml?ref=#{commit.commit}"
+        gh_url = travis_yaml_url + "&client_secret=" + gh_client_secret +
+                                   "&client_id=" + gh_client_id
+
+        response1 = Faraday.get(gh_url)
+        raw_url = JSON.parse(response1.body)["download_url"]
+        response2 = Faraday.get(raw_url)
+        travis_yml = response2.body
+        travis_yaml_json = YAML.load(travis_yaml)
+        Travis::Yaml.matrix(travis_yaml_json)
+      end
+
+      def create_job_with_config(repository, commit, build, owner,
+                                 job_config_json, index)
+        job_config = JobConfig.create!(repository_id: repository.id,
+                                       config: job_config_json)
+        Job.create!(
           repository_id: repository.id,
           commit_id: commit.id,
           source: build,
           state: "created",
-          owner: owner)
+          number: "#{build.number}.#{index}"
+          owner: owner,
+          config_id: job_config.id)
       end
     end
   end
