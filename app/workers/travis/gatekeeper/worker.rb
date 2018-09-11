@@ -65,7 +65,7 @@ module Travis
 
       def create_jobs!(repository, commit, owner, build)
         matrix_array = travis_matrix(repository, commit)
-        matrix = matrix_array.first
+        matrix = matrix_array.rows.first
 
         if matrix["matrix"].present?
           matrix["matrix"]["include"].each_with_index do |matrix_config, index|
