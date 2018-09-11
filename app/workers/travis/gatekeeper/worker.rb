@@ -117,7 +117,7 @@ module Travis
           commit_id: commit.id,
           source: build,
           state: "created",
-          number: "#{build.number}.#{index}"
+          number: "#{build.number}.#{index}",
           owner: owner,
           config_id: job_config.id)
       end
