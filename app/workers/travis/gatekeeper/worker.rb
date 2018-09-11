@@ -103,7 +103,7 @@ module Travis
         response1 = Faraday.get(gh_url)
         raw_url = JSON.parse(response1.body)["download_url"]
         response2 = Faraday.get(raw_url)
-        travis_yml = response2.body
+        travis_yaml = response2.body
         travis_yaml_json = YAML.load(travis_yaml)
         Travis::Yaml.matrix(travis_yaml_json)
       end
