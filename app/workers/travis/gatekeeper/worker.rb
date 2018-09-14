@@ -112,7 +112,7 @@ module Travis
                                  job_config_json, index)
         job_config = JobConfig.create!(repository_id: repository.id, key: 'key',
                                        config: job_config_json)
-        Job.create!(
+        Job::Test.create!(
           repository_id: repository.id,
           commit_id: commit.id,
           source: build,
