@@ -84,21 +84,11 @@ module Travis
         end
       end
 
-      def config
-        file = File.expand_path('config/travis.yml')
-        env = ENV['RAILS_ENV']
-        YAML.load_file(file)[env]
-      end
-
       def travis_matrix(repository, commit)
-        gh_oauth = config["oauth2"]
-        gh_client_id = gh_oauth["client_id"]
-        gh_client_secret = gh_oauth["client_secret"]
-
         repo_url = "https://api.github.com/repos/" + repository.owner_name + "/" + repository.name
         travis_yaml_url = repo_url + "/contents/.travis.yml?ref=#{commit.commit}"
-        gh_url = travis_yaml_url + "&client_secret=" + gh_client_secret +
-                                   "&client_id=" + gh_client_id
+        gh_token = repository.users.first.github_oauth_token
+        gh_url = travis_yaml_url + "&auth_token=" + gh_token
 
         response1 = Faraday.get(gh_url)
         raw_url = JSON.parse(response1.body)["download_url"]
