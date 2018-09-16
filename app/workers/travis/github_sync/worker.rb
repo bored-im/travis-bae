@@ -51,7 +51,8 @@ module Travis
             owner: owner,
             github_id: gh_repo[:id],
             default_branch: gh_repo[:default_branch],
-            github_language: gh_repo[:language])
+            github_language: gh_repo[:language],
+            private: gh_repo[:private])
 
           permission = repo.permissions.find_or_initialize_by(user_id: user.id)
           permission.update_attributes!(
