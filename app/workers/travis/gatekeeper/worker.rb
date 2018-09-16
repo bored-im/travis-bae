@@ -88,7 +88,7 @@ module Travis
         repo_url = "https://api.github.com/repos/" + repository.owner_name + "/" + repository.name
         travis_yaml_url = repo_url + "/contents/.travis.yml?ref=#{commit.commit}"
         gh_token = repository.users.first.github_oauth_token
-        gh_url = travis_yaml_url + "&auth_token=" + gh_token
+        gh_url = travis_yaml_url + "&access_token=" + gh_token
 
         response1 = Faraday.get(gh_url)
         raw_url = JSON.parse(response1.body)["download_url"]
