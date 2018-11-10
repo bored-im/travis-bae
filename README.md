@@ -148,6 +148,10 @@ With all these modules falling in place, a typical flow would be like this:
 - We also have travis tasks to send emails, slack notifications etc. Its
   not setup as of now.
 
+![Architecture](/architecture.svg)
+
+Note that Redis is always used to process events drained from database or
+rabbitmq.
 
 ### Get it working on your cluster
 
